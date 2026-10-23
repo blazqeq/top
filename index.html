@@ -1,105 +1,641 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="da" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuperAwesome Guides</title>
+    <title>SuperAwesome Leaderboards</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            accent: '#a855f7',
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s infinite ease-in-out',
+                        'float': 'float 4s infinite ease-in-out',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+                            '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-6px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* CSS Styling */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a1a;
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
+            font-family: 'Inter', sans-serif;
+            background-color: #080c14;
+            color: #f3f4f6;
+            min-height: 100vh;
         }
 
-        h1 {
-            color: #ffcc00; /* SuperAwesome gul */
-            margin-bottom: 10px;
+        /* Glassmorphism custom styling */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        p {
-            color: #cccccc;
-            margin-bottom: 30px;
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+        .glass-card:hover {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(168, 85, 247, 0.3);
+            transform: translateY(-2px);
         }
 
-        .video-card {
-            background: #2d2d2d;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
+        /* Gold, Silver, Bronze Special Styling */
+        .rank-gold {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.18) 0%, rgba(15, 23, 42, 0.85) 100%);
+            border: 1px solid rgba(234, 179, 8, 0.45);
+            box-shadow: 0 0 30px rgba(234, 179, 8, 0.15);
+        }
+        .rank-silver {
+            background: linear-gradient(135deg, rgba(148, 163, 184, 0.18) 0%, rgba(15, 23, 42, 0.85) 100%);
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            box-shadow: 0 0 25px rgba(148, 163, 184, 0.1);
+        }
+        .rank-bronze {
+            background: linear-gradient(135deg, rgba(217, 119, 6, 0.18) 0%, rgba(15, 23, 42, 0.85) 100%);
+            border: 1px solid rgba(217, 119, 6, 0.45);
+            box-shadow: 0 0 25px rgba(217, 119, 6, 0.1);
         }
 
-        .video-card:hover {
-            transform: scale(1.02);
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-
-        /* Responsiv iframe */
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 ratio */
-            height: 0;
-            overflow: hidden;
-            border-radius: 5px;
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
         }
-
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
         }
-
-        footer {
-            margin-top: 50px;
-            font-size: 0.9em;
-            color: #777;
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(168, 85, 247, 0.5);
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-indigo-500 selection:text-white flex flex-col">
 
-    <h1>SuperAwesome Guides</h1>
-    <p>Find alle video guides til SuperAwesome herunder.</p>
+    <!-- Minimal Header Bar -->
+    <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            
+            <!-- Left Side: Last Updated Timestamp -->
+            <div class="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                <i class="fa-regular fa-clock text-indigo-400"></i>
+                <span>Sidst opdateret: <strong id="lastUpdatedHeader" class="text-slate-200 font-mono">--:--:--</strong></span>
+            </div>
 
-    <div class="video-grid">
-        <!-- Video 1 -->
-        <div class="video-card">
-            <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/ggPpoaaEfcc?si=DnedTdh4cEto6KI1" frameborder="0" allowfullscreen></iframe>
+            <!-- Right Side: Manual Refresh Button -->
+            <button id="refreshBtn" onclick="fetchLeaderboardData(true)" class="flex items-center gap-2 px-4 py-2 bg-indigo-600/80 hover:bg-indigo-600 border border-indigo-500/40 rounded-xl text-xs font-semibold text-white transition-all active:scale-95 shadow-md shadow-indigo-600/20">
+                <i id="refreshIcon" class="fa-solid fa-arrows-rotate"></i>
+                <span>Opdater</span>
+            </button>
+
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Top Controls: Dynamic Category Tabs & Search Bar -->
+        <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+            
+            <!-- Dynamic Category Navigation Tabs -->
+            <div id="categoryTabs" class="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
+                <div class="animate-pulse flex space-x-2">
+                    <div class="h-10 w-28 bg-slate-800/60 rounded-xl"></div>
+                    <div class="h-10 w-28 bg-slate-800/60 rounded-xl"></div>
+                </div>
+            </div>
+
+            <!-- Search Input -->
+            <div class="relative min-w-[260px] lg:w-72">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Søg efter spiller..." 
+                       class="w-full pl-10 pr-8 py-2.5 rounded-xl bg-slate-900/70 border border-slate-700/60 text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
         </div>
 
-        <!-- Video 2 -->
-        <div class="video-card">
-            <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/Lrc743KCDv8?si=yv5o-7C1gqNW5pMq" frameborder="0" allowfullscreen></iframe>
+        <!-- Top 3 Podium Section -->
+        <section id="podiumSection" class="relative pt-2 pb-2">
+            <div id="podiumContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end max-w-4xl mx-auto">
+                <!-- Top 3 Players Cards Rendered Here -->
             </div>
-        </div>
+        </section>
 
-        <!-- Video 3 -->
-        <div class="video-card">
-            <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/aSgxuxpJnrc?si=NFYVjLHsKqAD_Z57" frameborder="0" allowfullscreen></iframe>
+        <!-- Main Leaderboard Table Section -->
+        <section class="glass-panel rounded-2xl overflow-hidden border border-slate-800/80 shadow-2xl">
+            
+            <!-- Table Header Meta Bar -->
+            <div class="px-6 py-4 border-b border-slate-800/80 flex items-center justify-between gap-2 bg-slate-900/50">
+                <div class="flex items-center gap-2">
+                    <h2 id="currentCategoryTitle" class="font-bold text-slate-100 text-lg">Spiller Point</h2>
+                    <span id="totalPlayersBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 font-medium">0 spillere</span>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <footer>
-        <p>&copy; 2026 SuperAwesome</p>
-    </footer>
+            <!-- Table Container -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800/80 text-xs font-semibold text-slate-400 uppercase tracking-wider bg-slate-900/40">
+                            <th class="py-3.5 px-6 w-20 text-center">Placering</th>
+                            <th class="py-3.5 px-6">Spiller</th>
+                            <th class="py-3.5 px-6">Rolle</th>
+                            <th id="valueColumnHeader" class="py-3.5 px-6 text-right">Spillerpoints</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody" class="divide-y divide-slate-800/50 text-sm font-medium">
+                        <!-- Spinner loading state -->
+                        <tr>
+                            <td colspan="4" class="py-16 text-center text-slate-400">
+                                <div class="inline-flex flex-col items-center gap-3">
+                                    <i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-500"></i>
+                                    <span class="text-sm font-normal">Henter seneste highscores...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
+            <!-- Table Pagination Footer -->
+            <div class="px-6 py-4 border-t border-slate-800/80 bg-slate-900/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="text-xs text-slate-400">
+                    Viser <span id="paginationInfo" class="font-semibold text-slate-200">0 - 0</span> af <span id="paginationTotal" class="font-semibold text-slate-200">0</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="prevPageBtn" onclick="changePage(-1)" disabled class="px-3 py-1.5 rounded-lg glass-card text-xs text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 transition">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> Forrige
+                    </button>
+                    <span id="currentPageNum" class="text-xs text-slate-400 px-2 font-mono">1 / 1</span>
+                    <button id="nextPageBtn" onclick="changePage(1)" disabled class="px-3 py-1.5 rounded-lg glass-card text-xs text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 transition">
+                        Næste <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Application Script -->
+    <script>
+        const API_URL = 'https://api.superawesome.dk/players/leaderboards';
+        const ITEMS_PER_PAGE = 15;
+
+        let state = {
+            data: null,
+            activeCategory: 'playerPoints',
+            searchQuery: '',
+            currentPage: 1,
+            isLoading: false
+        };
+
+        // Fallback Mock Data matching SuperAwesome structure
+        const MOCK_DATA = {
+            "updatedAt": new Date().toISOString(),
+            "refreshIntervalSeconds": 300,
+            "leaderboards": {
+                "playerPoints": [
+                    { "rank": 1, "uuid": "fe156b60-0195-4a65-994d-125deff15ea0", "username": "Wafffidooe", "role": "VIP", "value": 190202399 },
+                    { "rank": 2, "uuid": "7d82e51e-253e-4133-9454-002ba73e3174", "username": "PandaPeter", "role": "player", "value": 107157275 },
+                    { "rank": 3, "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "username": "SuperCraft_DK", "role": "MVP+", "value": 89430120 },
+                    { "rank": 4, "uuid": "b2c3d4e5-f6a7-8901-bcde-f23456789012", "username": "Thor_Nordic", "role": "player", "value": 72100450 },
+                    { "rank": 5, "uuid": "c3d4e5f6-a7b8-9012-cdef-345678901234", "username": "MetteMuffins", "role": "player", "value": 65320110 },
+                    { "rank": 6, "uuid": "d4e5f6a7-b8c9-0123-def0-456789012345", "username": "BuilderBob", "role": "Staff", "value": 54890000 },
+                    { "rank": 7, "uuid": "e5f6a7b8-c9d0-1234-ef01-567890123456", "username": "DiamondHunter", "role": "VIP", "value": 48120300 },
+                    { "rank": 8, "uuid": "f6a7b8c9-d0e1-2345-f012-678901234567", "username": "CreeperMaster", "role": "player", "value": 41900220 },
+                    { "rank": 9, "uuid": "01234567-89ab-cdef-0123-456789abcdef", "username": "RedstoneGuru", "role": "MVP", "value": 39500000 },
+                    { "rank": 10, "uuid": "12345678-9abc-def0-1234-56789abcdef0", "username": "Alex_Block", "role": "player", "value": 32100800 },
+                    { "rank": 11, "uuid": "23456789-abcd-ef01-2345-6789abcdef01", "username": "DanishGamer23", "role": "player", "value": 28400000 },
+                    { "rank": 12, "uuid": "3456789a-bcde-f012-3456-789abcdef012", "username": "PixelQueen", "role": "VIP", "value": 25100000 }
+                ],
+                "levelKills": [
+                    { "rank": 1, "uuid": "7d82e51e-253e-4133-9454-002ba73e3174", "username": "PandaPeter", "role": "player", "value": 14500 },
+                    { "rank": 2, "uuid": "fe156b60-0195-4a65-994d-125deff15ea0", "username": "Wafffidooe", "role": "VIP", "value": 12300 },
+                    { "rank": 3, "uuid": "f6a7b8c9-d0e1-2345-f012-678901234567", "username": "CreeperMaster", "role": "player", "value": 9800 },
+                    { "rank": 4, "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "username": "SuperCraft_DK", "role": "MVP+", "value": 8100 }
+                ],
+                "playTimeHours": [
+                    { "rank": 1, "uuid": "fe156b60-0195-4a65-994d-125deff15ea0", "username": "Wafffidooe", "role": "VIP", "value": 3420 },
+                    { "rank": 2, "uuid": "d4e5f6a7-b8c9-0123-def0-456789012345", "username": "BuilderBob", "role": "Staff", "value": 2890 },
+                    { "rank": 3, "uuid": "7d82e51e-253e-4133-9454-002ba73e3174", "username": "PandaPeter", "role": "player", "value": 2150 }
+                ]
+            }
+        };
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchLeaderboardData();
+        });
+
+        // Main Fetch Handler
+        async function fetchLeaderboardData(isManual = false) {
+            if (state.isLoading) return;
+            state.isLoading = true;
+
+            const refreshIcon = document.getElementById('refreshIcon');
+            if (refreshIcon) refreshIcon.classList.add('fa-spin');
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+
+                const jsonData = await response.json();
+                state.data = jsonData;
+
+            } catch (err) {
+                console.warn('API fetch failed or CORS blocked. Fallback data loaded:', err);
+                state.data = MOCK_DATA;
+            } finally {
+                state.isLoading = false;
+                if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+
+                if (state.data) {
+                    const categories = Object.keys(state.data.leaderboards || {});
+                    if (categories.length > 0 && !categories.includes(state.activeCategory)) {
+                        state.activeCategory = categories[0];
+                    }
+
+                    renderCategories();
+                    renderUI();
+                }
+            }
+        }
+
+        // Render Category Tabs dynamically from API response
+        function renderCategories() {
+            const container = document.getElementById('categoryTabs');
+            if (!container || !state.data || !state.data.leaderboards) return;
+
+            const categories = Object.keys(state.data.leaderboards);
+
+            container.innerHTML = categories.map(catKey => {
+                const isActive = catKey === state.activeCategory;
+                const formattedName = formatCategoryName(catKey);
+                
+                const activeClasses = 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30 border-indigo-400/40';
+                const inactiveClasses = 'glass-card text-slate-300 hover:text-white border-slate-700/50';
+
+                return `
+                    <button onclick="switchCategory('${catKey}')" 
+                            class="px-4 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap border flex items-center gap-2 ${isActive ? activeClasses : inactiveClasses}">
+                        <i class="${getCategoryIcon(catKey)}"></i>
+                        <span>${formattedName}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        // Switch category active state
+        function switchCategory(catKey) {
+            if (state.activeCategory === catKey) return;
+            state.activeCategory = catKey;
+            state.currentPage = 1;
+            renderCategories();
+            renderUI();
+        }
+
+        // Main Render Orchestrator
+        function renderUI() {
+            if (!state.data || !state.data.leaderboards) return;
+
+            const currentList = state.data.leaderboards[state.activeCategory] || [];
+            
+            // Search Filtering
+            const filteredList = currentList.filter(player => 
+                player.username.toLowerCase().includes(state.searchQuery.toLowerCase())
+            );
+
+            // Update Metadata Header & Table Dynamic Column Name
+            document.getElementById('lastUpdatedHeader').textContent = formatTimestamp(state.data.updatedAt || new Date().toISOString());
+            document.getElementById('currentCategoryTitle').textContent = formatCategoryName(state.activeCategory);
+            document.getElementById('totalPlayersBadge').textContent = `${filteredList.length} spillere`;
+            
+            const colHeader = document.getElementById('valueColumnHeader');
+            if (colHeader) {
+                colHeader.textContent = getColumnHeaderTitle(state.activeCategory);
+            }
+
+            // Render Podium & Main Leaderboard Table
+            renderPodium(filteredList);
+            renderTable(filteredList);
+        }
+
+        // Podium Rendering Function (Top 3)
+        function renderPodium(players) {
+            const container = document.getElementById('podiumContainer');
+            if (!container) return;
+
+            if (players.length < 3 || state.searchQuery.trim() !== '') {
+                container.innerHTML = '';
+                document.getElementById('podiumSection').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('podiumSection').classList.remove('hidden');
+
+            const top1 = players[0];
+            const top2 = players[1];
+            const top3 = players[2];
+
+            // Reorder for display: 2nd place (left), 1st place (center), 3rd place (right)
+            const podiumItems = [
+                { player: top2, place: 2, class: 'order-2 md:order-1 rank-silver', crownColor: 'text-slate-300', crownIcon: 'fa-medal' },
+                { player: top1, place: 1, class: 'order-1 md:order-2 rank-gold scale-105 z-10 animate-float', crownColor: 'text-amber-400', crownIcon: 'fa-crown' },
+                { player: top3, place: 3, class: 'order-3 rank-bronze', crownColor: 'text-amber-600', crownIcon: 'fa-award' }
+            ];
+
+            const statLabel = getColumnHeaderTitle(state.activeCategory);
+
+            container.innerHTML = podiumItems.map(item => {
+                const p = item.player;
+                const headUrl = `https://mc-heads.net/avatar/${p.username}/100`;
+
+                return `
+                    <div class="glass-panel rounded-2xl p-5 flex flex-col items-center justify-between text-center relative overflow-hidden transition-transform duration-300 hover:scale-[1.03] ${item.class}">
+                        <div class="absolute top-3 right-3 text-xl ${item.crownColor}">
+                            <i class="fa-solid ${item.crownIcon}"></i>
+                        </div>
+
+                        <div class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/10 text-xs font-bold mb-2">
+                            #${item.place}
+                        </div>
+
+                        <div class="relative group my-2">
+                            <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 opacity-50 blur group-hover:opacity-100 transition"></div>
+                            <img src="${headUrl}" alt="${p.username}" 
+                                 onerror="this.src='https://minotar.net/helm/Steve/100.png'"
+                                 class="relative w-20 h-20 rounded-xl shadow-lg border-2 border-white/20 object-contain bg-slate-900">
+                        </div>
+
+                        <div class="mt-2 w-full">
+                            <h3 class="font-bold text-slate-100 text-lg truncate max-w-[180px] mx-auto">${escapeHtml(p.username)}</h3>
+                            <div class="mt-1">${getRoleBadgeHtml(p.role)}</div>
+                        </div>
+
+                        <div class="mt-4 w-full py-2 px-3 rounded-xl bg-slate-900/70 border border-slate-800">
+                            <span class="text-xs text-slate-400 uppercase tracking-wider block">${statLabel}</span>
+                            <span class="text-lg font-extrabold text-white font-mono">${formatValueByCategory(p.value, state.activeCategory)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Leaderboard Table Rendering
+        function renderTable(players) {
+            const tbody = document.getElementById('leaderboardBody');
+            if (!tbody) return;
+
+            if (players.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="py-12 text-center text-slate-400">
+                            <div class="inline-flex flex-col items-center gap-2">
+                                <i class="fa-solid fa-user-slash text-2xl text-slate-500"></i>
+                                <span>Ingen spillere fundet med søgeordet "${escapeHtml(state.searchQuery)}".</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                updatePaginationControls(0, 0, 0);
+                return;
+            }
+
+            const startIndex = (state.currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, players.length);
+            const paginatedItems = players.slice(startIndex, endIndex);
+
+            tbody.innerHTML = paginatedItems.map((player) => {
+                const rank = player.rank || (players.indexOf(player) + 1);
+                const headUrl = `https://mc-heads.net/avatar/${player.username}/48`;
+                
+                let rankBadgeClass = 'text-slate-400 bg-slate-800/60';
+                if (rank === 1) rankBadgeClass = 'text-amber-300 bg-amber-500/20 border border-amber-500/40 font-bold';
+                else if (rank === 2) rankBadgeClass = 'text-slate-300 bg-slate-400/20 border border-slate-400/40 font-bold';
+                else if (rank === 3) rankBadgeClass = 'text-amber-500 bg-amber-700/20 border border-amber-700/40 font-bold';
+
+                return `
+                    <tr class="hover:bg-white/[0.03] transition-colors group">
+                        <td class="py-3.5 px-6 text-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-xs ${rankBadgeClass}">
+                                ${rank}
+                            </span>
+                        </td>
+
+                        <td class="py-3.5 px-6">
+                            <div class="flex items-center gap-3">
+                                <img src="${headUrl}" alt="${player.username}" 
+                                     onerror="this.src='https://minotar.net/helm/Steve/48.png'"
+                                     class="w-9 h-9 rounded-lg border border-slate-700/60 group-hover:scale-110 transition-transform bg-slate-900">
+                                <div>
+                                    <div class="font-bold text-slate-100 group-hover:text-indigo-300 transition-colors">
+                                        ${escapeHtml(player.username)}
+                                    </div>
+                                    <div class="text-[10px] text-slate-500 font-mono select-all">
+                                        ${player.uuid ? player.uuid.substring(0, 8) + '...' : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="py-3.5 px-6">
+                            ${getRoleBadgeHtml(player.role)}
+                        </td>
+
+                        <td class="py-3.5 px-6 text-right font-mono font-bold text-slate-100 text-base">
+                            ${formatValueByCategory(player.value, state.activeCategory)}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            updatePaginationControls(startIndex + 1, endIndex, players.length);
+        }
+
+        // Pagination Handler
+        // Category mapping helpers
+        function getColumnHeaderTitle(key) {
+            const cleanKey = key.toLowerCase();
+            if (cleanKey.includes('playtime') || cleanKey.includes('spilletid')) return 'Spilletid';
+            if (cleanKey.includes('playerpoints') || cleanKey === 'playerpoint') return 'Spillerpoints';
+            if (cleanKey.includes('lobbypoints') || cleanKey === 'lobbypoint') return 'Lobbypoints';
+            if (cleanKey.includes('rating') || cleanKey.includes('ratings')) return 'Ratings';
+            if (cleanKey.includes('kills')) return 'Kills';
+            if (cleanKey.includes('deaths')) return 'Deaths';
+            
+            return formatCategoryName(key);
+        }
+
+        function formatCategoryName(key) {
+            const names = {
+                'playerPoints': 'Spillerpoints',
+                'lobbyPoints': 'Lobbypoints',
+                'playTimeHours': 'Spilletid',
+                'playtime': 'Spilletid',
+                'ratings': 'Ratings',
+                'rating': 'Ratings',
+                'levelKills': 'Level Kills'
+            };
+            return names[key] || key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        }
+
+        function formatValueByCategory(val, categoryKey) {
+            if (val === undefined || val === null) return '0';
+            const cleanKey = categoryKey.toLowerCase();
+            
+            // Format time values with suffix if integer
+            if (cleanKey.includes('playtimehours') || cleanKey.includes('playtime_hours')) {
+                return `${formatNumber(val)} t.`;
+            }
+            if (cleanKey === 'playtime' || cleanKey === 'spilletid') {
+                return typeof val === 'number' ? `${formatNumber(val)} t.` : val;
+            }
+
+            return formatNumber(val);
+        }
+
+        function getCategoryIcon(key) {
+            const cleanKey = key.toLowerCase();
+            if (cleanKey.includes('playerpoints')) return 'fa-solid fa-star text-amber-400';
+            if (cleanKey.includes('lobbypoints')) return 'fa-solid fa-coins text-purple-400';
+            if (cleanKey.includes('playtime') || cleanKey.includes('spilletid')) return 'fa-solid fa-stopwatch text-emerald-400';
+            if (cleanKey.includes('rating')) return 'fa-solid fa-trophy text-amber-300';
+            if (cleanKey.includes('kills')) return 'fa-solid fa-skull text-red-400';
+            return 'fa-solid fa-list-ol text-indigo-400';
+        }
+
+        function changePage(delta) {
+            state.currentPage += delta;
+            renderUI();
+            document.getElementById('currentCategoryTitle').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Realtime Search
+        function handleSearch(query) {
+            state.searchQuery = query;
+            state.currentPage = 1;
+            
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (clearBtn) {
+                if (query.length > 0) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+
+            renderUI();
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('searchInput');
+            if (input) input.value = '';
+            handleSearch('');
+        }
+
+        // Formatting Helpers
+        function formatNumber(num) {
+            if (num === undefined || num === null) return '0';
+            return new Intl.NumberFormat('da-DK').format(num);
+        }
+
+        function formatTimestamp(isoString) {
+            if (!isoString) return '--:--:--';
+            try {
+                const date = new Date(isoString);
+                return date.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            } catch (e) {
+                return isoString;
+            }
+        }
+
+        function formatCategoryName(key) {
+            const names = {
+                'playerPoints': 'Spiller Point',
+                'levelKills': 'Level Kills',
+                'playTimeHours': 'Spilletid (Timer)'
+            };
+            return names[key] || key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        }
+
+        function getCategoryIcon(key) {
+            const icons = {
+                'playerPoints': 'fa-solid fa-star text-amber-400',
+                'levelKills': 'fa-solid fa-skull text-red-400',
+                'playTimeHours': 'fa-solid fa-stopwatch text-emerald-400'
+            };
+            return icons[key] || 'fa-solid fa-list-ol text-indigo-400';
+        }
+
+        function getRoleBadgeHtml(role) {
+            if (!role) role = 'player';
+            const cleanRole = role.toLowerCase();
+
+            if (cleanRole.includes('staff') || cleanRole.includes('admin')) {
+                return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-red-500/20 text-red-300 border border-red-500/30 uppercase tracking-wide">Staff</span>`;
+            } else if (cleanRole.includes('mvp')) {
+                return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wide">${role}</span>`;
+            } else if (cleanRole.includes('vip')) {
+                return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wide">VIP</span>`;
+            } else {
+                return `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-800 text-slate-400 border border-slate-700/50 uppercase tracking-wide">Spiller</span>`;
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+    </script>
 </body>
 </html>
